@@ -1,4 +1,13 @@
 ########################################################################################################################
+# THIS IS AN UNPUBLISHED WORK CONTAINING Rohit Priyadarshi's CONFIDENTIAL AND PROPRIETARY INFORMATION, CREATED IN 2018
+#
+# I have worked very hard to create a quality product and wish to realize the fair fruits of my labor. I therefore
+# insist that you honor my copyright. This material is provided 'as is', with absolutely no warranty expressed or
+# implied. However, I want to encourage the use of my product in all possible circumstances and will work very hard to
+# meet your needs if you will contact me at rohit@rishkan.com and ask for permission.
+########################################################################################################################
+
+########################################################################################################################
 # sudo systemctl enable pigpiod
 # sudo systemctl start pigpiod
 # sudo pigpiod
