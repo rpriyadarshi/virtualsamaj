@@ -289,7 +289,7 @@ class ADT7420:
                 temp = adc_code / 128.0
             return temp
 
-    def __init__(self, bus, addr, delay, mon_file):
+    def __init__(self, bus, addr, delay, mon_file, console_msg):
         self.temp = None
         self.time = None
         self.time_str = None
@@ -298,6 +298,7 @@ class ADT7420:
         self.i2c_addr = addr
         self.i2c_delay = delay
         self.mon_file = mon_file
+        self.con = console_msg
         self.i2c_flags = 0
 
         self.dev_pi = pigpio.pi()
@@ -351,25 +352,29 @@ class ADT7420:
     def log_connection(self):
         self.read_time()
         msg = '{0}, {1}, {2}'.format(self.time_str, SENS_MSG_CONNECT, hex(self.dev_id))
-        print(msg)
+        if self.con:
+            print(msg)
         self.log.write('{0}\n'.format(msg))
 
     def log_disconnection(self):
         self.read_time()
         msg = '{0}, {1}, {2}'.format(self.time_str, SENS_MSG_DISCONNECT, hex(self.dev_id))
-        print(msg)
+        if self.con:
+            print(msg)
         self.log.write('{0}\n'.format(msg))
 
     def log_sensor_info(self):
         self.read_time()
         msg = '{0}, {1}, {2}, {3}, {4}'.format(self.time_str, sens_vendor[self.dev_man_id],
                                                SENS_MSG_BOOT, SENS_MSG_REV, self.dev_rev_id)
-        print(msg)
+        if self.con:
+            print(msg)
         self.log.write('{0}\n'.format(msg))
 
     def log_data(self):
         msg = '{0}, {1}'.format(self.time_str, str(self.temp))
-        print(msg)
+        if self.con:
+            print(msg)
         self.log.write('{0}\n'.format(msg))
 
     def open_log(self):
@@ -380,7 +385,7 @@ class ADT7420:
 
 
 def mon_temp():
-    ts = ADT7420(1, 0x49, 1, '/home/pi/temp_mon.csv')
+    ts = ADT7420(1, 0x49, 1, '/home/pi/temp_mon.csv', True)
     ts.monitor()
 
 
