@@ -362,7 +362,8 @@ class ADT7420:
 
     def log_sensor_info(self):
         self.read_time()
-        msg = '{0}, {1}, {2}, {3}, {4}'.format(self.time_str, sens_vendor[self.dev_man_id], SENS_MSG_BOOT, SENS_MSG_REV, self.dev_rev_id)
+        msg = '{0}, {1}, {2}, {3}, {4}'.format(self.time_str, sens_vendor[self.dev_man_id],
+                                               SENS_MSG_BOOT, SENS_MSG_REV, self.dev_rev_id)
         print(msg)
         self.log.write('{0}\n'.format(msg))
 
