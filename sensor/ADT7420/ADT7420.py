@@ -242,6 +242,7 @@ import time
 
 SENS_MSG_BOOT = 'Temperature Sensor'
 SENS_MSG_REV = 'Rev'
+SENS_MSG_DISCONNECT = 'Disconnecting Sensor'
 
 VEND_ANALOG_DEVICES = 'Analog Devices'
 VEND_ANALOG_DEVICES_ID = 0b11001
@@ -309,6 +310,16 @@ class ADT7420:
         self.time_str = str(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(self.time)))
         self.temp = c2f(i2c_data.convert())
 
+    def read_once(self):
+        self.read()
+        self.display()
+        time.sleep(self.i2c_delay)
+
+    def disconnect(self):
+        print(SENS_MSG_DISCONNECT)
+        r = self.dev_pi.i2c_close(self.dev_temp)
+        return r
+
     def display_info(self):
         msg = '{0} {1} {2} {3}:'.format(sens_vendor[self.dev_man_id], SENS_MSG_BOOT, SENS_MSG_REV, self.dev_rev_id)
         print(msg)
@@ -318,19 +329,24 @@ class ADT7420:
         print(msg)
         self.log.write('{0}\n'.format(msg))
 
+    def open_log(self):
+        self.log = open(self.mon_file, 'w')
+
+    def close_log(self):
+        self.log.close()
+
     def monitor(self):
         try:
-            with open(self.mon_file, 'w') as self.log:
-                while True:
-                    self.read()
-                    self.display()
-                    time.sleep(self.i2c_delay)
+            self.open_log()
+            while True:
+                self.read_once()
 
         except KeyboardInterrupt:
             pass
 
-        print('Exiting the loop')
-        r = self.dev_pi.i2c_close(self.dev_temp)
+        r = self.disconnect()
+        self.close_log()
+        return r
 
 
 def mon_temp():
